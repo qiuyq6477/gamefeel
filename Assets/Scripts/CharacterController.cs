@@ -51,6 +51,16 @@ public class CharacterController : MonoBehaviour
     [Header("枪口")]
     [SerializeField]
     private Transform GunPoint;
+    [Header("开火间隔")]
+    [SerializeField]
+    private float interval = 0.1f;
+
+    [Header("子弹速度")]
+    [SerializeField]
+    private float bulletSpeed;
+    [Header("子弹速度Y的偏移")]
+    [SerializeField]
+    private float bulletSpeedY = 1f;
     
     Rigidbody2D rig;
     InputManager input;
@@ -93,6 +103,7 @@ public class CharacterController : MonoBehaviour
         rig = GetComponent<Rigidbody2D>();
         playerLayerMask = LayerMask.GetMask("Player");
         playerLayerMask = ~playerLayerMask;             //获得当前玩家层级的mask值，让射线忽略玩家层检测
+        playAnimator = GetComponentInChildren<Animator>();
     }
 
     private void FixedUpdate()
@@ -109,6 +120,8 @@ public class CharacterController : MonoBehaviour
     void Update()
     {
         RayCastBox();
+        playAnimator.SetBool("isGround", isGround);
+        playAnimator.SetFloat("speedy", Velocity.y);
         CheckDir();
 		if(Velocity.x >= MoveSpeed)
 		{
@@ -128,7 +141,7 @@ public class CharacterController : MonoBehaviour
             Dash();
         }
 
-        if (input.FireKeyDown)
+        if (input.FireKey)
         {
 	        Fire();
         }
@@ -149,11 +162,21 @@ public class CharacterController : MonoBehaviour
         }
     }
 
+    private float _interval = 0;
     private void Fire()
     {
-	    var go = PoolManager.Spawn(BulletType, GunPoint.transform.position, Quaternion.identity);
-	    var bullet = go.GetComponent<Bullet>();
-	    bullet.dir = GetDirInt;
+	    _interval -= Time.deltaTime;
+	    if (_interval <= 0)
+	    {
+		    _interval = interval;
+		    AudioManager.instance.PlaySound("fire");
+		    var go = PoolManager.Spawn(BulletType, GunPoint.transform.position, Quaternion.identity);
+		    var bullet = go.GetComponent<Bullet>();
+		    bullet.dir = GetDirInt;
+		    bullet.moveSpeed = bulletSpeed;
+		    bullet.speedOffsetY = bulletSpeedY;
+		    PoolManager.Spawn("gunEffect", GunPoint.transform.position, Quaternion.identity, 0.05f);
+	    }
     }
 
     /// <summary>
@@ -216,7 +239,12 @@ public class CharacterController : MonoBehaviour
 						Velocity.x = -MoveSpeed;
 				}
 			}
-  
+			
+            playAnimator.SetFloat("speedx", Math.Abs(Velocity.x));
+        }
+        else
+        {
+	        playAnimator.SetFloat("speedx", 0);
         }
     }
 
@@ -250,7 +278,6 @@ public class CharacterController : MonoBehaviour
         UpBox = Physics2D.BoxCastAll(Position, boxSize, 0, Vector3.up, 0.05f, LayerMask.GetMask("Ground"));
         DownBox = Physics2D.BoxCast(Position, boxSize, 0, Vector3.down, 0.05f, LayerMask.GetMask("Ground"));
         HitEnemyHead = Physics2D.BoxCast(Position, boxSize, 0, Vector3.down, 0.05f, LayerMask.GetMask("Enemy"));
-
         if (HitEnemyHead.collider != null && Velocity.y < 0)
         {
 	        Jump(new Vector2(Velocity.x, JumpSpeed/2), new Vector2(MoveSpeed, JumpSpeed));
@@ -524,8 +551,7 @@ public class CharacterController : MonoBehaviour
 		isMove = true;
 		while (playState == PlayState.Jump && input.JumpKey && dis < curJumpMax)
         {
-
-			if (!CheckUpMove())
+	        if (!CheckUpMove())
             {
                 Velocity.y = 0;
                 isIntroJump = false;
@@ -569,6 +595,7 @@ public class CharacterController : MonoBehaviour
         }
         // fall down
         Velocity.y = 0;
+        playAnimator.SetFloat("speedy", Velocity.y);
         yield return 0.1f;
         isIntroJump = false;
         playState = PlayState.Fall;

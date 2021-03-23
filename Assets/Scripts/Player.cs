@@ -1,31 +1,28 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // InputManager input;
-    // private CharacterController characterController;
-    // void Start()
-    // {
-    //     input = InputManager.Instance;
-    //     characterController = GetComponent<CharacterController>();
-    // }
-    //
-    // // Update is called once per frame
-    // void Update()
-    // {
-    //     if (input.DashKeyDown)
-    //     {
-    //         characterController.Dash();
-    //     }
-    //     if (input.FireKeyDown)
-    //     {
-    //         characterController.Fire();
-    //     }
-    //     if (input.JumpKeyDown)
-    //     {
-    //         characterController.Jump();
-    //     }
-    // }
+   private Moveable _moveable;
+   private float move;
+   private bool jump;
+   private void Start()
+   {
+      _moveable = GetComponent<Moveable>();
+      
+   }
+
+   private void Update()
+   {
+      move = Input.GetAxis("Horizontal");
+      jump = Input.GetButtonDown("Jump");
+      _moveable.Move(move, false, jump);
+   }
+
+   private void FixedUpdate()
+   {
+      
+   }
 }
