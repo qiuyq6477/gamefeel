@@ -20,6 +20,11 @@ public class Bullet : MonoBehaviour
     public float moveSpeed;
 
     public float speedOffsetY;
+    [Header("爆炸半径")]
+    public float explosionRadius;
+
+    [Header("爆炸概率")] 
+    public float explosionRate = 0.5f;
     
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _spriteRenderer;
@@ -44,12 +49,25 @@ public class Bullet : MonoBehaviour
         if (other.transform.CompareTag("Enemy"))
         {
             other.transform.GetComponent<Enemy>().hurt(dmg, dir);
+            
+            float r = Random.Range(0.0f, 1.0f);
+            if (r >= explosionRate)
+            {
+                PoolManager.Spawn("explosion", transform.position, Quaternion.identity, 0.2f);
+                AudioManager.instance.PlaySound("explosion");
+                var collider2Ds =
+                    Physics2D.OverlapCircleAll(transform.position, explosionRadius, LayerMask.GetMask("Enemy"));
+                foreach (var collider in collider2Ds)
+                {
+                    collider.gameObject.GetComponent<Enemy>().hurt(dmg, Random.Range(-1, 1) > 0.5 ? 1 : -1);
+                }
+            }
         }
 
         var pos = transform.position;
         pos.x += dir * 0.65f;
-        PoolManager.Spawn("hitEffect1", pos, transform.localRotation, 0.07f); 
-        Destroy(this.gameObject);
+        PoolManager.Spawn("hitEffect1", pos, transform.localRotation, 0.07f);
+        Destroy(this.gameObject); 
     }
 
     // Update is called once per frame

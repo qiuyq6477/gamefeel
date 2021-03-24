@@ -8,24 +8,24 @@ public class ShellGenerator : MonoBehaviour
     public Transform shellInitPosition;
     public Vector2 force;
     public Vector2 rotate;
-    private Weapon _weapon;
+    private IWeapon _weapon;
     void Start()
     {
-        _weapon = GetComponentInParent<Weapon>();
+        _weapon = GetComponentInParent<IWeapon>();
     }
 
     private float _interval = 0;
     void Update()
     {
-        if (_weapon.onfire)
+        if (_weapon.IsFire)
         {
             _interval -= Time.deltaTime;
             if (_interval <= 0)
             {
-                _interval = _weapon.interval;
+                _interval = _weapon.Interval;
                 var go = PoolManager.Spawn(BulletShellType, shellInitPosition.position, Quaternion.identity);
                 var rb = go.GetComponent<Rigidbody2D>();
-                rb.AddForce(new Vector2(-_weapon.weaponDir * Random.Range(force.x, force.y), Random.Range(force.x, force.y)));
+                rb.AddForce(new Vector2(-_weapon.Dir * Random.Range(force.x, force.y), Random.Range(force.x, force.y)));
                 rb.AddTorque(Random.Range(rotate.x, rotate.y));
             }
         }

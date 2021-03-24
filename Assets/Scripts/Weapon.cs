@@ -2,7 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+interface IWeapon
+{
+    bool IsFire { get; set; }
+    float Interval { get; set; }
+    int Dir { get; set; }
+    float BackForce{ get; set; }
+    void OnFire(int dir);
+}
+
+public class Weapon : MonoBehaviour, IWeapon
 {
     [Header("子弹类型")]
     [SerializeField]
@@ -10,9 +19,15 @@ public class Weapon : MonoBehaviour
     [Header("枪口")]
     [SerializeField]
     protected Transform GunPoint;
-    [Header("开火间隔")]
-    [SerializeField]
-    public float interval = 0.1f;
+
+    [Header("开火间隔")] [SerializeField] 
+    private float interval = 0.1f;
+
+    public float Interval
+    {
+        get { return interval; }
+        set { interval = value; }
+    }
 
     [Header("子弹速度")]
     [SerializeField]
@@ -23,17 +38,25 @@ public class Weapon : MonoBehaviour
 
     [Header("后坐力")]
     [SerializeField]
-    public float backforce = -1f;
+    private float backforce = -1.0f;
+    public float BackForce
+    {
+        get { return backforce; }
+        set { backforce = value; }
+    }
 
-    [HideInInspector]
-    public bool onfire = false;
-    [HideInInspector]
-    public int weaponDir;
+    public bool IsFire { get; set; }
+    private int dir;
+    public int Dir {
+        get { return dir; }
+        set { dir = value; }
+    }
+    
     protected Movement _movement;
     
     protected Cinemachine.CinemachineCollisionImpulseSource MyInpulse;
 
-    void Start()
+    protected virtual void Start()
     {
         _movement = GetComponent<Movement>();
         MyInpulse = GetComponent<Cinemachine.CinemachineCollisionImpulseSource>();
@@ -41,18 +64,18 @@ public class Weapon : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         
         if (Input.GetButton("Fire1"))
         {
-            onfire = true;
+            IsFire = true;
             Fire(_movement.side);
             MyInpulse.GenerateImpulse();
         }
         else
         {
-            onfire = false;
+            IsFire = false;
         }
         
     }
@@ -60,17 +83,17 @@ public class Weapon : MonoBehaviour
     private float _interval = 0;
     private void Fire(int dir)
     {
-        weaponDir = dir;
+        this.dir = dir;
         _interval -= Time.deltaTime;
         if (_interval <= 0)
         {
-            _interval = interval;
+            _interval = Interval;
             AudioManager.instance.PlaySound("fire");
             OnFire(dir);
         }
     }
 
-    protected virtual void OnFire(int dir)
+    public virtual void OnFire(int dir)
     {
         var go = PoolManager.Spawn(BulletType, GunPoint.transform.position, Quaternion.identity);
         var bullet = go.GetComponent<Bullet>();

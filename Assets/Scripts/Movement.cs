@@ -58,14 +58,14 @@ public class Movement : MonoBehaviour
     public bool canDash;
 
     private IMyInput input;
-    private Weapon _weapon;
+    private IWeapon _weapon;
     void Start()
     {
         animator = GetComponentInChildren<Animator>();
         coll = GetComponent<Collision>();
         rb = GetComponent<Rigidbody2D>();
         input = GetComponent<IMyInput>();
-        _weapon = GetComponent<Weapon>();
+        _weapon = GetComponent<IWeapon>();
         // anim = GetComponentInChildren<AnimationScript>();
     }
     
@@ -82,10 +82,10 @@ public class Movement : MonoBehaviour
 
         Walk(dir);
        // anim.SetHorizontalMovement(x, y, rb.velocity.y);
-       if (_weapon != null && _weapon.onfire)
+       if (_weapon != null && _weapon.IsFire)
        {
            var velocity = rb.velocity;
-           velocity = new Vector2(velocity.x + _weapon.backforce * -side, velocity.y);
+           velocity = new Vector2(velocity.x + _weapon.BackForce * -side, velocity.y);
            rb.velocity = velocity;
        }
        
@@ -188,7 +188,7 @@ public class Movement : MonoBehaviour
         if (wallGrab || wallSlide || !canMove)
             return;
 
-        if (_weapon != null && _weapon.onfire)
+        if (_weapon != null && _weapon.IsFire)
         {
             
         }

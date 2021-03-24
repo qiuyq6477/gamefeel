@@ -5,15 +5,11 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int dir;
-    public float moveSpeed;
     [SerializeField]
     int life;
 
     private Animator animator;
-    private SpriteRenderer _renderer;
     private Rigidbody2D _rigidbody2D;
-    private Collider2D _collider;
     private int damageDir;
     private float staticTime;
     private Movement _movement;
@@ -22,8 +18,6 @@ public class Enemy : MonoBehaviour
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         animator = GetComponentInChildren<Animator>();
-        _renderer = GetComponentInChildren<SpriteRenderer>();
-        _collider = GetComponent<Collider2D>();
         _movement = GetComponent<Movement>();
         _collision = GetComponent<Collision>();
         gameObject.layer = 10;

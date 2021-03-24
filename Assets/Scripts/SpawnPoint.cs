@@ -7,6 +7,7 @@ public class SpawnPoint : MonoBehaviour
     public string EnemyType;
     public float Interval;
     public int Num;
+    public int Dir = -1;
     void Start()
     {
         StartCoroutine(SpawnEnemy());
@@ -17,8 +18,9 @@ public class SpawnPoint : MonoBehaviour
         for (int i = 0; i < Num; i++)
         {
             var go = PoolManager.Spawn(EnemyType, transform.position, Quaternion.identity);
-            var enemy = go.GetComponent<Enemy>();
-            enemy.dir = -1;
+            var enemy = go.GetComponent<RobotInput>();
+            enemy.x = Dir;
+            enemy.xRaw = Dir;
             yield return new WaitForSeconds(Interval);
         }
     }

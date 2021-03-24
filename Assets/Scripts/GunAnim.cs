@@ -17,7 +17,7 @@ public class GunAnim : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_weapon.onfire)
+        if (_weapon.IsFire)
         {
             _animator.SetFloat("speedx", -1);
         }

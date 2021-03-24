@@ -7,7 +7,7 @@ public class SuperWeapon : Weapon
     public float Angle;
     public int Num;
 
-    protected override void OnFire(int dir)
+    public override void OnFire(int dir)
     {
         int angle = (int)Angle / Num;
         int start = angle;
