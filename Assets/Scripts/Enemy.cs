@@ -94,10 +94,10 @@ public class Enemy : MonoBehaviour
     {
         AudioManager.instance.PlaySound("dead");
         animator.SetTrigger("dead");
-        gameObject.layer = 9;
+        gameObject.layer = 12;
         foreach (Transform child in transform)
         {
-            child.gameObject.layer = 9;
+            child.gameObject.layer = 12;
         }
         _movement.canMove = false;
         _rigidbody2D.velocity = new Vector2(Math.Abs(_rigidbody2D.velocity.x) * damageDir, _movement.jumpForce);

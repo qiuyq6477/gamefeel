@@ -200,7 +200,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166540062}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.111348, y: -0.80500007, z: -10}
+  m_LocalPosition: {x: -4.0316963, y: -1.5935804, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -540,7 +540,7 @@ MonoBehaviour:
   m_ZDamping: 1
   m_TargetMovementOnly: 1
   m_ScreenX: 0.85
-  m_ScreenY: 0.75
+  m_ScreenY: 0.687
   m_CameraDistance: 10
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
@@ -592,8 +592,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyType: enemy
-  delay: 20
-  Interval: 0.5
+  delay: 25
+  Interval: 1
   Num: 10
   Dir: -1
 --- !u!4 &873356490
@@ -636,7 +636,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1179908668}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.111348, y: -0.80500007, z: -10}
+  m_LocalPosition: {x: -4.0316963, y: -1.5935804, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 625365699}
@@ -672,7 +672,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 1.7069943, y: 1}
+    m_SensorSize: {x: 1.9792061, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -848,8 +848,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyType: enemy
   delay: 20
-  Interval: 0.5
-  Num: 20
+  Interval: 0.8
+  Num: 10
   Dir: -1
 --- !u!4 &1460952240
 Transform:
@@ -3627,7 +3627,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6821121407610264661}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.66, y: -3.22, z: 0}
+  m_LocalPosition: {x: 2.66, y: -3.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 179866553}
@@ -3866,7 +3866,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_AttackTime: 0
-      m_SustainTime: 0.2
+      m_SustainTime: 0.41
       m_DecayTime: 0.7
       m_ScaleWithImpact: 1
       m_HoldForever: 0
@@ -3879,7 +3879,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_IgnoreTag: 
-  m_UseImpactDirection: 0
+  m_UseImpactDirection: 1
   m_ScaleImpactWithMass: 0
   m_ScaleImpactWithSpeed: 0
 --- !u!114 &6821121407610264668
