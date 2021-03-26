@@ -11,15 +11,18 @@ public class Enemy : MonoBehaviour
     private Animator animator;
     private Rigidbody2D _rigidbody2D;
     private int damageDir;
+    private float damageForce;
     private float staticTime;
     private Movement _movement;
     private Collision _collision;
+    private RobotInput _input;
     void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         animator = GetComponentInChildren<Animator>();
         _movement = GetComponent<Movement>();
         _collision = GetComponent<Collision>();
+        _input = GetComponent<RobotInput>();
         gameObject.layer = 10;
         _movement.canMove = true;
         foreach (Transform child in transform)
@@ -29,7 +32,7 @@ public class Enemy : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (life <= 0)
         {
@@ -37,47 +40,51 @@ public class Enemy : MonoBehaviour
             {
                 _rigidbody2D.bodyType = RigidbodyType2D.Static;
             }
+
+            if (stopTime > 0)
+            {
+                Time.timeScale = 1;
+            }
         }
-        // RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(dir, 0), 0.5f, LayerMask.GetMask("Ground"));
-        // if (hit.collider != null)
-        // {
-        //     dir = -dir;
-        //     _renderer.flipX = !_renderer.flipX;
-        // }
-        //
-        // var velocity = _rigidbody2D.velocity;
-        // velocity.x = dir * moveSpeed * Time.fixedDeltaTime;
-        // if (life <= 0)
-        // {
-        //     velocity.x = Math.Abs(velocity.x);
-        //     velocity.x = damageDir == 1 ? velocity.x : -velocity.x;
-        // }
-        // _rigidbody2D.velocity = velocity;
-        //
-        // if (life <= 0)
-        // {
-        //     staticTime -= Time.deltaTime;
-        //     if (staticTime <= 0)
-        //     {
-        //         RaycastHit2D ground = Physics2D.Raycast(transform.position, new Vector2(0, -1), 1f, LayerMask.GetMask("Ground"));
-        //         if (ground.collider != null)
-        //         {
-        //             _rigidbody2D.bodyType = RigidbodyType2D.Static;
-        //             return;
-        //         }
-        //     }
-        // }
-        //
-        // animator.SetFloat("speedx", Math.Abs(velocity.x));
+        else
+        {
+            if (backTime > 0)
+            {
+                backTime -= Time.unscaledDeltaTime;
+                var cur = _rigidbody2D.velocity;
+                cur.x += damageDir * damageForce;
+                _rigidbody2D.velocity = cur;
+                // if (backTime <= 0)
+                // {
+                //     _rigidbody2D.velocity = lastVelocity;
+                // }
+            }
+            if (stopTime > 0)
+            {
+                stopTime -= Time.unscaledDeltaTime;
+                if (stopTime <= 0)
+                {
+                    Time.timeScale = 1;
+                }
+            }
+        }
     }
 
-    public void hurt(int damage, int dir)
+    private float backTime;
+    private float stopTime;
+    private Vector2 lastVelocity;
+    public void hurt(int damage, int dir, float force)
     {
         if (life <= 0) return;
         damageDir = dir;
+        damageForce = force;
         AudioManager.instance.PlaySound("hurt");
         life -= damage;
         animator.SetTrigger("hurt");
+        backTime = 0.1f;
+        stopTime = 0.03f;
+        Time.timeScale = 0;
+        lastVelocity = _rigidbody2D.velocity;
         if (life <= 0)
         {
             die();

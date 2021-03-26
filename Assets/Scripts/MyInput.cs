@@ -38,7 +38,7 @@ public class MyInput : MonoBehaviour, IMyInput
         yRaw = Input.GetAxisRaw("Vertical");
 
         float target = _movement.side == -1 ? 0.75f : 0.25f;
-        temp.m_ScreenX = Mathf.Lerp(temp.m_ScreenX, target, Time.deltaTime*8);
+        temp.m_ScreenX = Mathf.Lerp(temp.m_ScreenX, target, Time.deltaTime*5);
     }
 
     public float X()

@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpawnPoint : MonoBehaviour
 {
     public string EnemyType;
+    public float delay;
     public float Interval;
     public int Num;
     public int Dir = -1;
@@ -15,6 +16,7 @@ public class SpawnPoint : MonoBehaviour
 
     IEnumerator SpawnEnemy()
     {
+        yield return new WaitForSeconds(delay);
         for (int i = 0; i < Num; i++)
         {
             var go = PoolManager.Spawn(EnemyType, transform.position, Quaternion.identity);

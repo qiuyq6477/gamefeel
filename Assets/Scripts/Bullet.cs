@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -26,12 +27,18 @@ public class Bullet : MonoBehaviour
     [Header("爆炸概率")] 
     public float explosionRate = 0.5f;
     
+    [Header("击退")] 
+    public float force = 0.2f;
+    
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _spriteRenderer;
+    private CinemachineCollisionImpulseSource MyInpulse;
+
     void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        MyInpulse = GetComponent<Cinemachine.CinemachineCollisionImpulseSource>();
         velocity.x = dir * moveSpeed;
         velocity.y = speedOffsetY;
         // _spriteRenderer.flipX = dir != 1;
@@ -48,18 +55,19 @@ public class Bullet : MonoBehaviour
         Debug.Log(other.gameObject.layer);
         if (other.transform.CompareTag("Enemy"))
         {
-            other.transform.GetComponent<Enemy>().hurt(dmg, dir);
+            other.transform.GetComponent<Enemy>().hurt(dmg, dir, force);
             
             float r = Random.Range(0.0f, 1.0f);
             if (r >= explosionRate)
             {
+                MyInpulse.GenerateImpulse();
                 PoolManager.Spawn("explosion", transform.position, Quaternion.identity, 0.2f);
                 AudioManager.instance.PlaySound("explosion");
                 var collider2Ds =
                     Physics2D.OverlapCircleAll(transform.position, explosionRadius, LayerMask.GetMask("Enemy"));
                 foreach (var collider in collider2Ds)
                 {
-                    collider.gameObject.GetComponent<Enemy>().hurt(dmg, Random.Range(-1, 1) > 0.5 ? 1 : -1);
+                    collider.gameObject.GetComponent<Enemy>().hurt(dmg, Random.Range(-1, 1) > 0.5 ? 1 : -1, 0);
                 }
             }
         }

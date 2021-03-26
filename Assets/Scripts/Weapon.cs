@@ -55,18 +55,18 @@ public class Weapon : MonoBehaviour, IWeapon
     protected Movement _movement;
     
     protected Cinemachine.CinemachineCollisionImpulseSource MyInpulse;
-
+    private Player _player;
     protected virtual void Start()
     {
         _movement = GetComponent<Movement>();
         MyInpulse = GetComponent<Cinemachine.CinemachineCollisionImpulseSource>();
-
+        _player = GetComponent<Player>();
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
-        
+        if (_player.death) return;
         if (Input.GetButton("Fire1"))
         {
             IsFire = true;
