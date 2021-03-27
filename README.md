@@ -35,7 +35,7 @@
 玩家可以死亡 ( MEANING ) :ballot_box_with_check:  
 踩头杀 :black_large_square:  
 
-
+![screen](E:\_unity_project\gamefeel\screen.gif)
 
 ### 带感为王 ( Juice it or Lose it )
 
